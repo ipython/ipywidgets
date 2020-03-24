@@ -572,6 +572,8 @@ class SelectionSlider(_SelectionNonempty):
         help="Display the current selected label next to the slider").tag(sync=True)
     continuous_update = Bool(True,
         help="Update the value of the widget as the user is holding the slider.").tag(sync=True)
+    behaviour = CaselessStrEnum(values=['drag-tap', 'drag-snap', 'tap', 'drag', 'snap'],
+        default_value='drag-tap', help="Slider dragging behaviour.").tag(sync=True)
 
 @register
 @doc_subst(_doc_snippets)
@@ -621,3 +623,5 @@ class SelectionRangeSlider(_MultipleSelectionNonempty):
         help="Display the current selected label next to the slider").tag(sync=True)
     continuous_update = Bool(True,
         help="Update the value of the widget as the user is holding the slider.").tag(sync=True)
+    behaviour = CaselessStrEnum(values=['drag-tap', 'drag-snap', 'tap', 'drag', 'snap'],
+        default_value='drag-tap', help="Slider dragging behaviour.").tag(sync=True)
