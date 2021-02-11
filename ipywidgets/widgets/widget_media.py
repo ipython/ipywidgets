@@ -187,6 +187,18 @@ class Video(_Media):
     loop = Bool(True, help="When true, the video will start from the beginning after finishing").tag(sync=True)
     controls = Bool(True, help="Specifies that video controls should be displayed (such as a play/pause button etc)").tag(sync=True)
 
+    def play(self):
+        """
+        Start playing the video
+        """
+        self.send({ "msg": "play" })
+
+    def pause(self):
+        """
+        Pause the video
+        """
+        self.send({ "msg": "pause" })
+
     @classmethod
     def from_file(cls, filename, **kwargs):
         return cls._from_file('video', filename, **kwargs)
@@ -215,6 +227,18 @@ class Audio(_Media):
     autoplay = Bool(True, help="When true, the audio starts when it's displayed").tag(sync=True)
     loop = Bool(True, help="When true, the audio will start from the beginning after finishing").tag(sync=True)
     controls = Bool(True, help="Specifies that audio controls should be displayed (such as a play/pause button etc)").tag(sync=True)
+
+    def play(self):
+        """
+        Start playing the audio
+        """
+        self.send({ "msg": "play" })
+
+    def pause(self):
+        """
+        Pause the audio
+        """
+        self.send({ "msg": "pause" })
 
     @classmethod
     def from_file(cls, filename, **kwargs):
