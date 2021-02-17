@@ -317,6 +317,26 @@ class Widget(LoggingHasTraits):
         if Widget._widget_construction_callback is not None and callable(Widget._widget_construction_callback):
             Widget._widget_construction_callback(widget)
 
+    @classmethod
+    def handle_comm_opened_control(cls, comm, msg):
+        cls.get_manager_state()
+        widgets = Widget.widgets.values()
+        # build a single dict with the full widget state
+        full_state = {}
+        drop_defaults = False
+        for widget in widgets:
+            full_state[widget.model_id] = {
+                'model_name': widget._model_name,
+                'model_module': widget._model_module,
+                'model_module_version': widget._model_module_version,
+                'state': widget.get_state(drop_defaults=drop_defaults),
+            }
+        full_state, buffer_paths, buffers = _remove_buffers(full_state)
+        # the message is also send as buffer, so it does not get handled by jupyter_server
+        msg = jsondumps([full_state, buffer_paths]).encode('utf8')
+        buffers.insert(0, msg)
+        comm.send(buffers=buffers)
+
     @staticmethod
     def handle_comm_opened(comm, msg):
         """Static method, called when a widget is constructed."""
