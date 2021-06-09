@@ -105,6 +105,7 @@ export abstract class ManagerBase implements IWidgetManager {
           // This presumes the view is added to the list of model views below
           view.once('remove', () => {
             delete model.views[id];
+            model.viewsSync.delete(id);
           });
 
           return view;
@@ -117,6 +118,7 @@ export abstract class ManagerBase implements IWidgetManager {
       }
     ));
     model.views[id] = viewPromise;
+    viewPromise.then(view => model.viewsSync.set(id, view));
     return viewPromise;
   }
 
@@ -140,6 +142,21 @@ export abstract class ManagerBase implements IWidgetManager {
     // found. Right now this isn't a true async function because it doesn't
     // always return a promise.
     return this._models[model_id];
+  }
+
+  /**
+   * Return a Map with all widgets that are created, note that this misses widgets
+   * that are in the process of being created (e.g. we may be in the process of fetching
+   * libraries)
+   */
+
+  get_models_sync(): Map<string, WidgetModel> {
+    // since map is mutable, return a copy
+    const copy = new Map<string, WidgetModel>();
+    this._modelsSync.forEach((value, key) => {
+      copy.set(key, value);
+    });
+    return copy;
   }
 
   /**
@@ -240,6 +257,7 @@ export abstract class ManagerBase implements IWidgetManager {
   register_model(model_id: string, modelPromise: Promise<WidgetModel>): void {
     this._models[model_id] = modelPromise;
     modelPromise.then(model => {
+      this._modelsSync.set(model_id, model);
       model.once('comm:close', () => {
         delete this._models[model_id];
       });
@@ -330,6 +348,7 @@ export abstract class ManagerBase implements IWidgetManager {
     return resolvePromisesDict(this._models).then(models => {
       Object.keys(models).forEach(id => models[id].close());
       this._models = Object.create(null);
+      this._modelsSync = new Map();
     });
   }
 
@@ -517,6 +536,7 @@ export abstract class ManagerBase implements IWidgetManager {
   private _models: { [key: string]: Promise<WidgetModel> } = Object.create(
     null
   );
+  private _modelsSync = new Map<string, WidgetModel>();
 }
 
 export interface IStateOptions {

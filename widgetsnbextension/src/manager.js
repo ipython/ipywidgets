@@ -11,6 +11,38 @@ var embedWidgets = require('./embed_widgets');
 
 var MIME_TYPE = 'application/vnd.jupyter.widget-view+json';
 
+function findViewsAndOutputs(notebook, models) {
+  var results = [];
+  notebook.get_cells().forEach(cell => {
+    if (!(cell.output_area && cell.output_area.outputs)) {
+      return;
+    }
+    cell.output_area.outputs.forEach((output, output_index) => {
+      if (!(output.data && output.data[MIME_TYPE])) {
+        return;
+      }
+      // assuming the nth output corresponds to the nth element
+      const element = cell.output_area.element[output_index];
+      var model_id = output.data[MIME_TYPE].model_id;
+      var model = models.get(model_id);
+      if (!model) {
+        return;
+      }
+      // find the view corresponding to the output
+      var view = Array.from(model.viewsSync.values()).find(view => {
+        return element.contains(view.el);
+      });
+      // if we found the view, we inject the mime bundle
+      if (!view) {
+        console.log('No view found for model');
+        return;
+      }
+      results.push({ view, output });
+    });
+  });
+  return results;
+}
+
 function polyfill_new_comm_buffers(
   manager,
   target_name,
@@ -219,6 +251,14 @@ export class WidgetManager extends ManagerBase {
    */
   _init_actions() {
     var notifier = Jupyter.notification_area.widget('widgets');
+    this.notebook.events.on('before_save.Notebook', () => {
+      const models = this.get_models_sync();
+      for (var result of findViewsAndOutputs(Jupyter.notebook, models)) {
+        var bundle = result.view.generateMimeBundle();
+        console.log(result.view, bundle);
+        _.extend(result.output.data, bundle);
+      }
+    });
     this.saveWidgetsAction = {
       handler: function() {
         this.get_state({
@@ -258,6 +298,47 @@ export class WidgetManager extends ManagerBase {
       'save-clear-widgets',
       'widgets'
     );
+
+    this.extraMimeWidgetsAction = {
+      handler: async () => {
+        const models = this.get_models_sync();
+        for (var result of findViewsAndOutputs(Jupyter.notebook, models)) {
+          var bundle = await result.view.generateMimeBundleExtra();
+          console.log(result.view, bundle);
+          _.extend(result.output.data, bundle);
+        }
+        Jupyter.menubar.actions.get('jupyter-notebook:save-notebook').handler({
+          notebook: Jupyter.notebook
+        });
+      },
+      help: 'Add extra mime bundles to output cells'
+    };
+    Jupyter.menubar.actions.register(
+      this.saveWidgetsAction,
+      'mime-extra-widgets',
+      'widgets'
+    );
+
+    this.clearMimeWidgetsAction = {
+      handler: async () => {
+        const models = this.get_models_sync();
+        for (var result of findViewsAndOutputs(Jupyter.notebook, models)) {
+          result.output.data = _.pick(result.output.data, [
+            MIME_TYPE,
+            'text/plain'
+          ]);
+        }
+        Jupyter.menubar.actions.get('jupyter-notebook:save-notebook').handler({
+          notebook: Jupyter.notebook
+        });
+      },
+      help: 'Remove extra mime bundles from output cells'
+    };
+    Jupyter.menubar.actions.register(
+      this.saveWidgetsAction,
+      'mime-clear-widgets',
+      'widgets'
+    );
   }
 
   /**
@@ -284,6 +365,8 @@ export class WidgetManager extends ManagerBase {
 
     var divider = document.createElement('ul');
     divider.classList.add('divider');
+    var divider2 = document.createElement('ul');
+    divider2.classList.add('divider');
 
     widgetsSubmenu.appendChild(
       this._createMenuItem('Save Notebook Widget State', this.saveWidgetsAction)
@@ -300,6 +383,19 @@ export class WidgetManager extends ManagerBase {
     );
     widgetsSubmenu.appendChild(
       this._createMenuItem('Embed Widgets', embedWidgets.action)
+    );
+    widgetsSubmenu.appendChild(divider2);
+    widgetsSubmenu.appendChild(
+      this._createMenuItem(
+        'Add extra to output cell mime bundle',
+        this.extraMimeWidgetsAction
+      )
+    );
+    widgetsSubmenu.appendChild(
+      this._createMenuItem(
+        'Clear extras mime bundle',
+        this.clearMimeWidgetsAction
+      )
     );
   }
 

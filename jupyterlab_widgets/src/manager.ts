@@ -334,30 +334,6 @@ export abstract class LabWidgetManager extends ManagerBase
   }
 
   /**
-   * Register a widget model.
-   */
-  register_model(model_id: string, modelPromise: Promise<WidgetModel>): void {
-    super.register_model(model_id, modelPromise);
-
-    // Update the synchronous model map
-    modelPromise.then(model => {
-      this._modelsSync.set(model_id, model);
-      model.once('comm:close', () => {
-        this._modelsSync.delete(model_id);
-      });
-    });
-  }
-
-  /**
-   * Close all widgets and empty the widget state.
-   * @return Promise that resolves when the widget state is cleared.
-   */
-  async clear_state(): Promise<void> {
-    await super.clear_state();
-    this._modelsSync = new Map();
-  }
-
-  /**
    * Synchronously get the state of the live widgets in the widget manager.
    *
    * This includes all of the live widget models, and follows the format given in
@@ -368,7 +344,7 @@ export abstract class LabWidgetManager extends ManagerBase
    */
   get_state_sync(options: IStateOptions = {}): ReadonlyPartialJSONValue {
     const models = [];
-    for (const model of this._modelsSync.values()) {
+    for (const model of this.get_models_sync().values()) {
       if (model.comm_live) {
         models.push(model);
       }
@@ -396,7 +372,6 @@ export abstract class LabWidgetManager extends ManagerBase
 
   private _commRegistration: IDisposable;
 
-  private _modelsSync = new Map<string, WidgetModel>();
   private _onUnhandledIOPubMessage = new Signal<
     this,
     KernelMessage.IIOPubMessage

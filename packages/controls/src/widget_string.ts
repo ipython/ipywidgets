@@ -67,6 +67,12 @@ export class HTMLView extends StringView {
     this.update(); // Set defaults.
   }
 
+  generateMimeBundle() {
+    return {
+      'text/html': this.model.get('value')
+    };
+  }
+
   /**
    * Update the contents of this view
    *

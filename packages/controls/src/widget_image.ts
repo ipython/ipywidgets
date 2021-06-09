@@ -39,6 +39,12 @@ export class ImageView extends DOMWidgetView {
     this.update(); // Set defaults.
   }
 
+  generateMimeBundle() {
+    return {
+      'text/html': this.el.outerHTML
+    };
+  }
+
   update(): void {
     /**
      * Update the contents of this view
