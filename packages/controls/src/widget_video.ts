@@ -40,6 +40,7 @@ export class VideoView extends DOMWidgetView {
     this.luminoWidget.addClass('jupyter-widgets');
     this.luminoWidget.addClass('widget-image');
     this.update(); // Set defaults.
+    this.model.on('msg:custom', this.handle_play_pause.bind(this));
   }
 
   update(): void {
@@ -90,6 +91,15 @@ export class VideoView extends DOMWidgetView {
     this.el.controls = this.model.get('controls');
 
     return super.update();
+  }
+
+  handle_play_pause(content: any): void {
+    if (content.msg == 'play') {
+      this.el.play();
+    }
+    if (content.msg == 'pause') {
+      this.el.pause();
+    }
   }
 
   remove(): void {
