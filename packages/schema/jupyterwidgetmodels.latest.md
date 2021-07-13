@@ -479,6 +479,7 @@ Attribute        | Type             | Default          | Help
 `_view_module_version` | string           | `'2.0.0'`        | 
 `_view_name`     | string           | `'FloatLogSliderView'` | 
 `base`           | number (float)   | `10.0`           | Base for the logarithm
+`behaviour`      | string (one of `'drag-tap'`, `'drag-snap'`, `'tap'`, `'drag'`, `'snap'`) | `'drag-tap'`     | Slider dragging behaviour.
 `continuous_update` | boolean          | `true`           | Update the value of the widget as the user is holding the slider.
 `description`    | string           | `''`             | Description of the control.
 `disabled`       | boolean          | `false`          | Enable or disable user changes
@@ -527,6 +528,7 @@ Attribute        | Type             | Default          | Help
 `_view_module`   | string           | `'@jupyter-widgets/controls'` | 
 `_view_module_version` | string           | `'2.0.0'`        | 
 `_view_name`     | string           | `'FloatRangeSliderView'` | 
+`behaviour`      | string (one of `'drag-tap'`, `'drag-snap'`, `'tap'`, `'drag'`, `'snap'`) | `'drag-tap'`     | Slider dragging behaviour.
 `continuous_update` | boolean          | `true`           | Update the value of the widget as the user is sliding the slider.
 `description`    | string           | `''`             | Description of the control.
 `disabled`       | boolean          | `false`          | Enable or disable user changes
@@ -553,6 +555,7 @@ Attribute        | Type             | Default          | Help
 `_view_module`   | string           | `'@jupyter-widgets/controls'` | 
 `_view_module_version` | string           | `'2.0.0'`        | 
 `_view_name`     | string           | `'FloatSliderView'` | 
+`behaviour`      | string (one of `'drag-tap'`, `'drag-snap'`, `'tap'`, `'drag'`, `'snap'`) | `'drag-tap'`     | Slider dragging behaviour.
 `continuous_update` | boolean          | `true`           | Update the value of the widget as the user is holding the slider.
 `description`    | string           | `''`             | Description of the control.
 `disabled`       | boolean          | `false`          | Enable or disable user changes
@@ -737,6 +740,7 @@ Attribute        | Type             | Default          | Help
 `_view_module`   | string           | `'@jupyter-widgets/controls'` | 
 `_view_module_version` | string           | `'2.0.0'`        | 
 `_view_name`     | string           | `'IntRangeSliderView'` | 
+`behaviour`      | string (one of `'drag-tap'`, `'drag-snap'`, `'tap'`, `'drag'`, `'snap'`) | `'drag-tap'`     | Slider dragging behaviour.
 `continuous_update` | boolean          | `true`           | Update the value of the widget as the user is sliding the slider.
 `description`    | string           | `''`             | Description of the control.
 `disabled`       | boolean          | `false`          | Enable or disable user changes
@@ -763,6 +767,7 @@ Attribute        | Type             | Default          | Help
 `_view_module`   | string           | `'@jupyter-widgets/controls'` | 
 `_view_module_version` | string           | `'2.0.0'`        | 
 `_view_name`     | string           | `'IntSliderView'` | 
+`behaviour`      | string (one of `'drag-tap'`, `'drag-snap'`, `'tap'`, `'drag'`, `'snap'`) | `'drag-tap'`     | Slider dragging behaviour.
 `continuous_update` | boolean          | `true`           | Update the value of the widget as the user is holding the slider.
 `description`    | string           | `''`             | Description of the control.
 `disabled`       | boolean          | `false`          | Enable or disable user changes
@@ -1010,6 +1015,7 @@ Attribute        | Type             | Default          | Help
 `_view_module`   | string           | `'@jupyter-widgets/controls'` | 
 `_view_module_version` | string           | `'2.0.0'`        | 
 `_view_name`     | string           | `'SelectionRangeSliderView'` | 
+`behaviour`      | string (one of `'drag-tap'`, `'drag-snap'`, `'tap'`, `'drag'`, `'snap'`) | `'drag-tap'`     | Slider dragging behaviour.
 `continuous_update` | boolean          | `true`           | Update the value of the widget as the user is holding the slider.
 `description`    | string           | `''`             | Description of the control.
 `disabled`       | boolean          | `false`          | Enable or disable user changes
@@ -1033,6 +1039,7 @@ Attribute        | Type             | Default          | Help
 `_view_module`   | string           | `'@jupyter-widgets/controls'` | 
 `_view_module_version` | string           | `'2.0.0'`        | 
 `_view_name`     | string           | `'SelectionSliderView'` | 
+`behaviour`      | string (one of `'drag-tap'`, `'drag-snap'`, `'tap'`, `'drag'`, `'snap'`) | `'drag-tap'`     | Slider dragging behaviour.
 `continuous_update` | boolean          | `true`           | Update the value of the widget as the user is holding the slider.
 `description`    | string           | `''`             | Description of the control.
 `disabled`       | boolean          | `false`          | Enable or disable user changes
