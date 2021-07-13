@@ -5724,7 +5724,7 @@
         "help": "Styling customizations",
         "name": "style",
         "type": "reference",
-        "widget": "DescriptionStyle"
+        "widget": "SliderStyle"
       },
       {
         "allow_none": true,
@@ -5857,7 +5857,7 @@
         "help": "Styling customizations",
         "name": "style",
         "type": "reference",
-        "widget": "DescriptionStyle"
+        "widget": "SliderStyle"
       },
       {
         "allow_none": true,
